@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DriftRoom - Join</title>
+    <!-- Use Inter font for clean, modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div id="app" class="landing-page">
+        <div class="landing-content">
+            <div class="logo-box">
+                <!-- Minimal abstract icon representing messaging -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+                    <img width="80" height="80" src="logo.png" alt="logo">
+                </svg>
+            </div>
+            
+            <h1 class="landing-title"><b>DriftRoom</b></h1>
+            <p class="landing-subtitle">Discover and connect with people near you in ephemeral spaces.</p>
+            
+            <div class="input-group">
+                <input type="text" id="name-input" class="input-field" placeholder="Enter your display name" autocomplete="off" autofocus>
+                <div id="error-msg" class="error-msg" style="display: none;">Please enter a name to continue</div>
+            </div>
+            
+            <button id="continue-btn" class="btn-primary">Continue</button>
+            <p class="landing-note">Your name is only used inside rooms.</p>
+        </div>
+    </div>
+    
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

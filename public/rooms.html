@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Local Chat - Rooms</title>
+    <!-- Use Inter font for clean, modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div id="app" class="rooms-page">
+        <!-- Top App Header -->
+        <header class="app-header">
+            <div class="logo-small">
+                <img width="40" height="40" src="logo.png" alt="logo">
+                <span>DriftRoom</span>
+            </div>
+            <div class="profile-chip">
+                <span id="profile-name">User</span>
+            </div>
+        </header>
+
+        <!-- Location Status Indicator -->
+        <section class="location-status">
+            <div class="status-indicator active"></div>
+            <span>Finding rooms near you...</span>
+        </section>
+
+        <!-- Main Content Area -->
+        <main class="rooms-content">
+            <div class="section-header">
+                <h2>Nearby Rooms</h2>
+                <!-- Create Room Trigger -->
+                <button id="btn-create-room" class="btn-icon" title="Create Room">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- List of Room Cards -->
+            <div id="rooms-list" class="rooms-list">
+                <!-- Room cards dynamically injected by JS -->
+            </div>
+        </main>
+
+        <!-- Create Room Modal Layer -->
+        <div id="create-room-modal" class="modal-overlay">
+            <div class="modal-card">
+                <h3>Create a Room</h3>
+                <p>Start a temporary space for people nearby.</p>
+                <div class="modal-form">
+                    <input type="text" id="new-room-name" class="input-field modal-input" placeholder="Room name (e.g. Coffee Lovers)" autocomplete="off">
+                    <input type="text" id="new-room-category" class="input-field modal-input" placeholder="Category (e.g. Casual)" autocomplete="off">
+                </div>
+                <div class="modal-actions">
+                    <button id="btn-cancel-room" class="btn-secondary">Cancel</button>
+                    <button id="btn-submit-room" class="btn-primary">Start Room</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="assets/js/rooms.js"></script>
+</body>
+</html>
