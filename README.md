@@ -33,27 +33,7 @@ Socket.io
 Database
 MongoDB Atlas
 Mongoose
-📁 Project Structure
-project/
-│
-├── public/
-│   ├── index.html
-│   ├── rooms.html
-│   ├── chat.html
-│   └── assets/
-│       ├── css/
-│       └── js/
-│
-├── models/
-│   ├── Room.js
-│   └── Message.js
-│
-├── routes/
-│   └── roomRoutes.js
-│
-├── server.js
-├── package.json
-└── .env
+
 ⚙️ Setup Instructions
 1. Clone the repository
 git clone https://github.com/your-username/driftroom.git
