@@ -1,7 +1,9 @@
 DriftRoom
 
 A location-based temporary chat room web app
+
 Link : https://driftroom.onrender.com/
+
 🚀 Overview
 
 DriftRoom is a real-time, location-based chat application that allows users to discover and join nearby temporary chat rooms without requiring sign-up or accounts.
@@ -21,6 +23,7 @@ No login required — just enter a name and start chatting
 See who joined/left in real-time
 ⚡ Lightweight & Fast
 Built with vanilla JavaScript for simplicity and performance
+
 🛠️ Tech Stack
 Frontend
 HTML
