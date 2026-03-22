@@ -24,17 +24,25 @@ router.get('/', async (req, res) => {
         // Find rooms where expiresAt is greater than now
         let rooms = await Room.find({ expiresAt: { $gt: new Date() } }).sort({ createdAt: -1 });
         
-        // Filter by 500 meters if lat and lng are provided
+        let roomsData = rooms.map(room => room.toObject());
+        
+        // Calculate distance and filter by 500 meters or isGlobal if lat and lng are provided
         if (lat && lng) {
             const userLat = parseFloat(lat);
             const userLng = parseFloat(lng);
-            rooms = rooms.filter(room => {
-                const distance = getDistanceInMeters(userLat, userLng, room.latitude, room.longitude);
-                return distance <= 500;
+            
+            roomsData = roomsData.map(room => {
+                if (!room.isGlobal && room.latitude && room.longitude) {
+                    room.distance = Math.round(getDistanceInMeters(userLat, userLng, room.latitude, room.longitude));
+                }
+                return room;
+            }).filter(room => {
+                if (room.isGlobal) return true;
+                return room.distance != null && room.distance <= 500;
             });
         }
 
-        res.json(rooms);
+        res.json(roomsData);
     } catch (err) {
         console.error('Error fetching rooms:', err.message);
         res.status(500).json({ error: 'Server Error' });
@@ -45,7 +53,7 @@ router.get('/', async (req, res) => {
 // @desc    Create a new room
 router.post('/', async (req, res) => {
     try {
-        const { roomName, category, latitude, longitude } = req.body;
+        const { roomName, category, latitude, longitude, isGlobal } = req.body;
 
         // Calculate expiresAt (e.g., 1 hour from creation)
         const expiresAt = new Date();
@@ -57,6 +65,7 @@ router.post('/', async (req, res) => {
             latitude,
             longitude,
             expiresAt,
+            isGlobal: isGlobal || false,
             activeUsers: 1 // Creator is the first user
         });
 

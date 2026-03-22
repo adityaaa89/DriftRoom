@@ -30,8 +30,9 @@
 
         <!-- Main Content Area -->
         <main class="rooms-content">
+            <!-- Global Rooms Section -->
             <div class="section-header">
-                <h2>Nearby Rooms</h2>
+                <h2>Global Rooms</h2>
                 <!-- Create Room Trigger -->
                 <button id="btn-create-room" class="btn-icon" title="Create Room">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -40,10 +41,18 @@
                     </svg>
                 </button>
             </div>
+            <div id="global-rooms-list" class="rooms-list" style="margin-bottom: 32px;">
+                <!-- Global Room cards dynamically injected by JS -->
+            </div>
+
+            <!-- Nearby Rooms Section -->
+            <div class="section-header">
+                <h2>Nearby Rooms</h2>
+            </div>
             
             <!-- List of Room Cards -->
-            <div id="rooms-list" class="rooms-list">
-                <!-- Room cards dynamically injected by JS -->
+            <div id="nearby-rooms-list" class="rooms-list">
+                <!-- Nearby Room cards dynamically injected by JS -->
             </div>
         </main>
 

@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     `;
 
-    const roomsList = document.getElementById('rooms-list');
+    const globalRoomsList = document.getElementById('global-rooms-list');
+    const nearbyRoomsList = document.getElementById('nearby-rooms-list');
 
     // Helper to calculate time left
     function formatTimeLeft(expiresAt) {
@@ -39,41 +40,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Render the room cards
     function renderRooms(rooms) {
-        roomsList.innerHTML = '';
+        globalRoomsList.innerHTML = '';
+        nearbyRoomsList.innerHTML = '';
         
-        if (rooms.length === 0) {
-            roomsList.innerHTML = `
+        const globalRooms = rooms.filter(r => r.isGlobal);
+        const nearbyRooms = rooms.filter(r => !r.isGlobal);
+        
+        if (globalRooms.length === 0) {
+            globalRoomsList.innerHTML = `
                 <div class="empty-state">
-                    No active rooms found. Create one to start chatting!
+                    No global rooms available at the moment.
                 </div>
             `;
-            return;
+        } else {
+            renderRoomList(globalRooms, globalRoomsList);
         }
 
-        rooms.forEach(room => {
-            const card = document.createElement('div');
-            card.className = 'room-card';
-            
-            const timeLeft = formatTimeLeft(room.expiresAt);
-
-            card.innerHTML = `
-                <div class="room-info">
-                    <h3 class="room-name">${escapeHTML(room.roomName)}</h3>
-                    <div class="room-meta">
-                        <span class="tag">${escapeHTML(room.category)}</span>
-                        <span class="meta-item">👥 ${room.activeUsers}</span>
-                        <span class="meta-item">⏳ ${timeLeft}</span>
-                    </div>
-                </div>
-                <div class="room-actions">
-                    <button class="btn-icon btn-share" data-id="${room._id}" data-name="${escapeHTML(room.roomName)}" title="Copy Link">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                    </button>
-                    <button class="btn-join" data-id="${room._id}" data-name="${escapeHTML(room.roomName)}">Join</button>
+        if (nearbyRooms.length === 0) {
+            nearbyRoomsList.innerHTML = `
+                <div class="empty-state">
+                    No nearby rooms found. Create one to start chatting!
                 </div>
             `;
-            roomsList.appendChild(card);
-        });
+        } else {
+            renderRoomList(nearbyRooms, nearbyRoomsList);
+        }
 
         // Add event listeners to dynamically created join buttons
         document.querySelectorAll('.btn-join').forEach(btn => {
@@ -109,14 +100,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function renderRoomList(roomArray, container) {
+        roomArray.forEach(room => {
+            const card = document.createElement('div');
+            card.className = 'room-card';
+            
+            const timeLeft = formatTimeLeft(room.expiresAt);
+            
+            let badgeHtml = '';
+            if (room.isGlobal) {
+                badgeHtml = '<span class="tag" style="background:var(--accent);color:white;">Global</span>';
+            } else if (room.distance != null) {
+                badgeHtml = `📍 ${room.distance}m away`;
+            } else {
+                badgeHtml = `📍 Nearby`;
+            }
+
+            card.innerHTML = `
+                <div class="room-info">
+                    <h3 class="room-name">${escapeHTML(room.roomName)}</h3>
+                    <div class="room-meta">
+                        <span class="tag">${escapeHTML(room.category)}</span>
+                        <span class="meta-item">👥 ${room.activeUsers}</span>
+                        ${room.isGlobal ? '' : `<span class="meta-item">⏳ ${timeLeft}</span>`}
+                        <span class="meta-item" style="color: var(--accent); font-weight: 500;">${badgeHtml}</span>
+                    </div>
+                </div>
+                <div class="room-actions">
+                    <button class="btn-icon btn-share" data-id="${room._id}" data-name="${escapeHTML(room.roomName)}" title="Copy Link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                    </button>
+                    <button class="btn-join" data-id="${room._id}" data-name="${escapeHTML(room.roomName)}">Join</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
     // 4. Fetch rooms from backend
     async function fetchRooms() {
         try {
-            roomsList.innerHTML = `
-                <div class="empty-state">
-                    Locating nearby rooms...
-                </div>
-            `;
+            globalRoomsList.innerHTML = '<div class="empty-state">Loading global rooms...</div>';
+            nearbyRoomsList.innerHTML = '<div class="empty-state">Locating nearby rooms...</div>';
 
             const location = await getUserLocation();
             
@@ -133,7 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
             renderRooms(rooms);
         } catch (error) {
             console.error('Error fetching rooms:', error);
-            roomsList.innerHTML = `
+            globalRoomsList.innerHTML = '';
+            nearbyRoomsList.innerHTML = `
                 <div class="empty-state" style="color: #e53e3e; border-color: #fc8181; background: #fff5f5;">
                     Cannot connect to server. Please try again later.
                 </div>

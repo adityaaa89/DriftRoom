@@ -30,6 +30,10 @@ const roomSchema = new mongoose.Schema({
         type: Date,
         required: true,
         expires: 172800 // 48 hours in seconds
+    },
+    isGlobal: {
+        type: Boolean,
+        default: false
     }
 });
 

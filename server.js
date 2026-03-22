@@ -33,7 +33,31 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Connect to MongoDB
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/localchat';
 mongoose.connect(MONGO_URI)
-    .then(() => console.log('✅ MongoDB Connected Successfully'))
+    .then(async () => {
+        console.log('✅ MongoDB Connected Successfully');
+        
+        // Seed Global Rooms
+        const globalRooms = [
+            { roomName: 'Global Chat', category: 'General' },
+            { roomName: 'Ask Anything', category: 'Q&A' },
+            { roomName: 'Open Discussion', category: 'Discussion' }
+        ];
+        
+        const RoomModel = require('./models/Room');
+        for (const gRoom of globalRooms) {
+            const existing = await RoomModel.findOne({ roomName: gRoom.roomName, isGlobal: true });
+            if (!existing) {
+                await RoomModel.create({
+                    roomName: gRoom.roomName,
+                    category: gRoom.category,
+                    isGlobal: true,
+                    expiresAt: new Date('2099-01-01'), // Far future expiration to bypass TTL
+                    activeUsers: 0
+                });
+                console.log(`🌍 Seeded global room: ${gRoom.roomName}`);
+            }
+        }
+    })
     .catch(err => console.error('❌ MongoDB Connection Error:', err.message));
 
 // API Routes
