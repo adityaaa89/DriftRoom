@@ -28,7 +28,8 @@ const roomSchema = new mongoose.Schema({
     },
     expiresAt: {
         type: Date,
-        required: true
+        required: true,
+        expires: 172800 // 48 hours in seconds
     }
 });
 

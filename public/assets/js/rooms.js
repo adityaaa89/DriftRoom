@@ -65,7 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="meta-item">⏳ ${timeLeft}</span>
                     </div>
                 </div>
-                <button class="btn-join" data-id="${room._id}" data-name="${escapeHTML(room.roomName)}">Join</button>
+                <div class="room-actions">
+                    <button class="btn-icon btn-share" data-id="${room._id}" data-name="${escapeHTML(room.roomName)}" title="Copy Link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                    </button>
+                    <button class="btn-join" data-id="${room._id}" data-name="${escapeHTML(room.roomName)}">Join</button>
+                </div>
             `;
             roomsList.appendChild(card);
         });
@@ -76,6 +81,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = e.target.getAttribute('data-id');
                 const name = e.target.getAttribute('data-name');
                 joinRoom(id, name);
+            });
+        });
+
+        // Add event listeners for share buttons
+        document.querySelectorAll('.btn-share').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const currentBtn = e.currentTarget;
+                const id = currentBtn.getAttribute('data-id');
+                const name = currentBtn.getAttribute('data-name');
+                
+                const shareUrl = `${window.location.origin}/?roomId=${id}&roomName=${encodeURIComponent(name)}`;
+                
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    const originalHTML = currentBtn.innerHTML;
+                    currentBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                    currentBtn.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        currentBtn.innerHTML = originalHTML;
+                        currentBtn.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
             });
         });
     }

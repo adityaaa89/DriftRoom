@@ -382,6 +382,27 @@ p {
     gap: 4px;
 }
 
+.room-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-share {
+    background: #f1f5f9;
+    color: var(--accent);
+}
+
+.btn-share:hover {
+    background: #e2e8f0;
+    color: var(--accent-hover);
+}
+
+.btn-share.copied {
+    color: #48bb78; /* Green check state */
+}
+
 .btn-join {
     padding: 10px 20px;
     background: var(--text-dark);

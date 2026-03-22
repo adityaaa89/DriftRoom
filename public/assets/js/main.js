@@ -25,9 +25,22 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMsg.style.display = 'none';
         nameInput.style.borderColor = '';
 
-        // Save to localStorage and proceed to rooms page
+        // Save to localStorage
         localStorage.setItem('localChat_username', name);
-        window.location.href = 'rooms.html';
+        
+        // Check if there's a shared room link
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomId = urlParams.get('roomId');
+        const roomName = urlParams.get('roomName');
+        
+        if (roomId && roomName) {
+            localStorage.setItem('localChat_currentRoomId', roomId);
+            localStorage.setItem('localChat_currentRoomName', roomName);
+            window.location.href = 'chat.html';
+        } else {
+            // Proceed to rooms page
+            window.location.href = 'rooms.html';
+        }
     }
 
     // Event listeners

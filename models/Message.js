@@ -16,7 +16,8 @@ const messageSchema = new mongoose.Schema({
     },
     timestamp: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        expires: 176400 // 49 hours in seconds (1 hour lifespan + 48 hours later)
     }
 });
 
